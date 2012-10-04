@@ -1,5 +1,7 @@
 var twitter = require('ntwitter'),
-    readline = require('readline');
+    io = require('socket.io');
+
+io.listen(8010);
 
 var twit = new twitter({
     consumer_key: 'aOin6QDyOnRr1jHKeKjAA',
@@ -8,20 +10,29 @@ var twit = new twitter({
     access_token_secret: 'R9syvhBkHUNHilO8S0R2JOKqiz9U7tdCLLm5Tdbxy4'
 });
 
-var rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+var trackQuery = '';
 
-rl.question("Enter search query: ", function(answer) {
-    var currentStream = twit.stream('statuses/filter', { 'track': answer }, function(stream) {
-        stream.on('data', function (data) {
-            var id = data.id;
-            var text = data.text;
-            var place = data.place;
-            var geo = data.geo;
-            var coordinates = data.coordinates;
-            console.log(data);
+io.sockets.on('connection', function (socket) {
+    socket.on('follow', function (data) {
+        trackQuery += ',' + data.symbol;
+
+        twit.stream('statuses/filter', { 'track': trackQuery }, function(stream) {
+            stream.on('data', function (data) {
+                var id = data.id;
+                var text = data.text;
+                var place = data.place;
+                var geo = data.geo;
+                var coordinates = data.coordinates;
+
+                socket.emit('mention', {});
+
+                socket.emit('positive', {});
+
+                socket.emit('negative', {});
+            });
         });
     });
 });
+
+
+
