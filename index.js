@@ -47,8 +47,32 @@ $(function() {
   $('.stock-input').on("keypress", function(evt) {
     if (evt.charCode !== 13) return;
 
+/*
     $('.loader').show();
     $results = $('#results').hide();
+    */
+
+
+    var symbol = $(this).val(),
+        $results = $('<div'
+
+
+    function makeUpdater(type) {
+      var $el = $("." + type);
+
+      return function (count){
+        $el.html(count);
+      };
+
+    }
+
+    var socket = io.connect('http://localhost:3010');
+    socket.emit('follow', {symbol: symbol });
+    socket.on('mention:' + symbol, updateMention);
+    socket.on('positive:' + symbol, updatePositive);
+    socket.on('negative:' + symbol, updateNegative);
+
+
 
     run($(this).val(), function(result) {
       console.log(result);
