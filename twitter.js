@@ -36,9 +36,11 @@ io.sockets.on('connection', function (socket) {
                     return;
                 }
 
-                var matchedSymbol = _.first(symbols, function(sym) {
+                var matchedSymbol = _.find(symbols, function(sym) {
                     return text.indexOf(sym) > -1;
                 });
+
+                console.log('matched symbol: ' + matchedSymbol);
 
                 if (_.any(positive, function(p) {
                     return text.indexOf(p) > -1;
