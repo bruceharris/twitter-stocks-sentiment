@@ -1,7 +1,9 @@
 var twitter = require('ntwitter'),
-    io = require('socket.io');
+    _ = require('underscore'),
+    io = require('socket.io').listen(8010);
 
-io.listen(8010);
+var positive = ["buy", "long", "bullish"];
+var negative = ["sell", "short", "bearish"];
 
 var twit = new twitter({
     consumer_key: 'aOin6QDyOnRr1jHKeKjAA',
@@ -10,25 +12,47 @@ var twit = new twitter({
     access_token_secret: 'R9syvhBkHUNHilO8S0R2JOKqiz9U7tdCLLm5Tdbxy4'
 });
 
-var trackQuery = '';
+var symbols = [];
 
 io.sockets.on('connection', function (socket) {
-    socket.on('follow', function (data) {
-        trackQuery += ',' + data.symbol;
+    console.log('new connection');
 
-        twit.stream('statuses/filter', { 'track': trackQuery }, function(stream) {
+    socket.on('follow', function (data) {
+        console.log('follow received.');
+
+        symbols.push(data.symbol);
+
+        twit.stream('statuses/filter', { 'track': symbols.join(',') }, function(stream) {
             stream.on('data', function (data) {
                 var id = data.id;
                 var text = data.text;
                 var place = data.place;
                 var geo = data.geo;
                 var coordinates = data.coordinates;
+                console.log(data);
+                console.log('----------------------------------------');
 
-                socket.emit('mention', {});
+                if (!text) {
+                    return;
+                }
 
-                socket.emit('positive', {});
+                var matchedSymbol = _.first(symbols, function(sym) {
+                    return text.indexOf(sym) > -1;
+                });
 
-                socket.emit('negative', {});
+                if (_.any(positive, function(p) {
+                    return text.indexOf(p) > -1;
+                })) {
+                    socket.emit('positive:' + matchedSymbol, data);
+                }
+
+                if (_.any(negative, function(p) {
+                    return text.indexOf(p) > -1;
+                })) {
+                    socket.emit('negative:' + matchedSymbol, data);
+                }
+
+                socket.emit('mention:' + matchedSymbol, data);
             });
         });
     });
