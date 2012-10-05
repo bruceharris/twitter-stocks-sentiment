@@ -10,7 +10,25 @@
     html, body {
       font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
     }
-    .positive, .negative {
+    .resultset {
+      padding: 10px;
+      margin: 10px;
+      border: 1px solid steelblue;
+      float: left;
+      width: 200px;
+    }
+    .symbol span {
+      font-family: monospace;
+      font-size: 1.5em;
+      color: steelblue;
+      background-image:;
+    }
+    .symbol img {
+      height: 20px;
+      width: 20px;
+      padding-left: 20px;
+    }
+    .positive, .negative, .mention {
       font-size: 20px;
     }
     .positive {
@@ -33,9 +51,11 @@
   
   <div class="loader" style="display: none;"></div>
 
-  <div id="results" style="display:none;">
+  <div id="results">
+    <!--
     <strong>stock: </strong> $<span class="stock"></span>
     &nbsp; positive: <span class="positive"></span> &nbsp; negative: <span class="negative"></span>
+  -->
   </div>
 
 </body>
