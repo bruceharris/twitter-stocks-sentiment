@@ -1,7 +1,8 @@
 twitter stocks sentiment
 =====
  
-this simple website takes a stock code and measures the number of positive vs negative comments about the stock on twitter over the past 24 hours.
+this simple website takes stock symbols and measures the number of positive vs negative
+comments on twitter in real time
 
 
 instructions
@@ -9,7 +10,9 @@ instructions
 
 1. `npm install` to install dependencies
 
-1. `node server &` to run the server in the background (bash)
+1. `node server &` to run the web server in the background (bash)
+
+1. `node twitter &` to run the websocket server in the background (bash)
 
 1. `open http://localhost:3001` to open site in new browser (bash)
 
