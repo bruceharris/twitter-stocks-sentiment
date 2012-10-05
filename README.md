@@ -10,6 +10,8 @@ instructions
 
 1. `npm install` to install dependencies
 
+1. edit `twitter.js` - replace Twitter API keys with your own
+
 1. `node server &` to run the web server in the background (bash)
 
 1. `node twitter &` to run the websocket server in the background (bash)
